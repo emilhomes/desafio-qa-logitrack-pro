@@ -12,4 +12,6 @@
 - **Resultado obtido:** Acesso concedido; a requisição de login retornou status 200 e o dashboard foi carregado com os dados.
 - **Impacto:** Falha de autenticação. Qualquer pessoa que conheça um e-mail cadastrado acessa dados de veículos, viagens, manutenções e indicadores financeiros.
 - **Observação:** O comportamento foi reproduzido com senhas diferentes.
-- **Evidência:** ![BUG-01](../evidencias/bugs/BUG01.png)
+- **Evidências:**
+  1. ![Fluxo do bug: senha errada e acesso concedido](../evidencias/bugs/BUG01_login_senha_errada.gif)
+  2. ![Requisição de login com status 200](../evidencias/bugs/BUG01_network_login_200.png)
