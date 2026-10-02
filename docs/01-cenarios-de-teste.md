@@ -1,15 +1,14 @@
-# Cenários de Testes
+# Execução Cenários de Testes
 
-### CT01 - [Título do cenário]
+### CT-LOG-01 - Login com credenciais válidas
 
 | Campo | Descrição |
 |---|---|
-| **Objetivo** | O que este teste valida |
-| **Pré-condições** | Estado necessário antes de executar |
-| **Dados utilizados** | Valores digitados/selecionados |
-| **Passos** | 1. ... 2. ... 3. ... |
-| **Resultado esperado** | O que deveria acontecer |
-| **Resultado obtido** | O que realmente aconteceu |
-| **Status** | ✅ Aprovado / ❌ Reprovado / ⏸️ Bloqueado |
-| **Evidências** | ![CT01](../evidencias/cenarios/CT01_resultado.png) |
-| **Bug relacionado** | BUG-01 (se houver) |
+| **Objetivo** | Validar que um usuário com credenciais válidas consegue autenticar-se e acessar a tela principal do sistema |
+| **Pré-condições** | Usuário previamente cadastrado (credenciais fornecidas no desafio); sistema acessível pela URL do desafio |
+| **Dados utilizados** | E-mail: logap@teste.com<br>Senha: a informada no documento do desafio |
+| **Passos** | 1. Abrir a URL da aplicação<br>2. Verificar que a tela de login é exibida<br>3. Preencher o campo "E-mail" com o e-mail informado<br>4. Preencher o campo "Senha" com a senha informada<br>5. Clicar no botão "Entrar" |
+| **Resultado esperado** | O sistema autentica o usuário e redireciona para o Dashboard, exibindo o nome e o e-mail do usuário no cabeçalho e os indicadores carregados, sem mensagens de erro |
+| **Resultado obtido** | O sistema autenticou o usuário e redirecionou para o Dashboard. O cabeçalho exibiu o usuário logado e os cards (Total de KM, Volume por Categoria, Cronograma de Manutenção, Ranking de Utilização e Projeção Financeira) foram carregados, sem mensagens de erro |
+| **Status** | Aprovado |
+| **Evidências** | 1. ![Formulário preenchido](../evidencias/cenarios/CT-LOG-01_1_formulario_preenchido.png)<br>2. ![Dashboard após login](../evidencias/cenarios/CT-LOG-01_2_dashboard.png) |
