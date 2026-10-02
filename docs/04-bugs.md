@@ -13,5 +13,5 @@
 - **Impacto:** Falha de autenticação. Qualquer pessoa que conheça um e-mail cadastrado acessa dados de veículos, viagens, manutenções e indicadores financeiros.
 - **Observação:** O comportamento foi reproduzido com senhas diferentes.
 - **Evidências:**
-  1. ![Fluxo do bug: senha errada e acesso concedido](../evidencias/bugs/BUG01_login_senha_errada.gif)
-  2. ![Requisição de login com status 200](../evidencias/bugs/BUG01_network_login_200.png)
+  1. ![Fluxo do bug: senha errada e acesso concedido](../evidencias/bugs/BUG01_login_senha_errada.gif.gif)
+  2. ![Requisição de login com status 200](../evidencias/bugs/BUG01_network_login_200.png.png)
