@@ -2,6 +2,8 @@
 
 ### CT01 - [Título do cenário]
 
+| Campo | Descrição |
+|---|---|
 | **Objetivo** | O que este teste valida |
 | **Pré-condições** | Estado necessário antes de executar |
 | **Dados utilizados** | Valores digitados/selecionados |
