@@ -38,7 +38,7 @@ Defeitos encontrados durante a execução dos cenários de teste do LogiTrack Pr
 | **Passos para reproduzir** | 1. Abrir a URL da aplicação;<br>2. Verificar que a tela de login é exibida;<br>3. Preencher o campo "E-mail" com o e-mail informado;<br>4. Preencher o campo "Senha" com a senha inválida;<br>5. Clicar no botão "Entrar"; |
 | **Resultado esperado** | O sistema não autentica o usuário e aparece uma mensagem de erro informando ao usuário que uma das suas credenciais estão incorretas. |
 | **Resultado obtido** | O sistema autenticou o usuário e redirecionou para o Dashboard. Não apareceu nenhuma mensagem de erro. A requisição de login retornou status 200. |
-| **Evidências** | Ver evidências do cenário CT-LOG-02 em `evidencias/cenarios/` (preencher com os nomes dos arquivos). |
+| **Evidências** | 1. ![Login com senha incorreta](../evidencias/bugs/BUG01_login_senha_errada.gif.gif)<br>2. ![Network](../evidencias/bugs/BUG01_network_login_200.png.png). |
 | **Sugestão de correção** | Validar a senha no servidor antes de emitir a sessão ou o token de acesso e retornar erro de credenciais inválidas (status 401). Cobrir com teste automatizado de API e de interface. |
 
 ### BUG-02: Cadastro de veículo aceita ano inválido
