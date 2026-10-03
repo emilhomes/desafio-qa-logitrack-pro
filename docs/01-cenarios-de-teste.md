@@ -11,7 +11,7 @@
 | **Resultado Esperado** | O sistema autentica o usuário e redireciona para o Dashboard, exibindo o nome e o e-mail do usuário no cabeçalho e os indicadores carregados, sem mensagens de erro. |
 | **Resultado Obtido** | O sistema autenticou o usuário e redirecionou para o Dashboard. O cabeçalho exibiu o usuário logado e os cards (Total de KM, Volume por Categoria, Cronograma de Manutenção, Ranking de Utilização e Projeção Financeira) foram carregados, sem mensagens de erro. |
 | **Status** | Aprovado |
-| **Evidências** |  |
+| **Evidências** | 1. ![Formulário preenchido](../evidencias/cenarios/CT-LOG-01_1_formulario_preenchido.png)<br>2. ![Dashboard após login](../evidencias/cenarios/CT-LOG-01_2_dashboard.png) |
 
 ### CT-LOG-02: Login com e-mail correto e senha inválida
 
@@ -24,7 +24,7 @@
 | **Resultado Esperado** | O sistema não autentica o usuário e aparece uma mensagem de erro informando ao usuário que uma das suas credenciais estão incorretas. |
 | **Resultado Obtido** | O sistema autenticou o usuário e redirecionou para o Dashboard. Não apareceu nenhuma mensagem de erro. A requisição de login retornou status 200. |
 | **Status** | Reprovado. |
-| **Evidência** |  |
+| **Evidências** | 1. ![Formulário preenchido](../evidencias/cenarios/CT-LOG-02_1_formulario_preenchido_senha_incorreta.png)<br>2. ![Dashboard após login](../evidencias/cenarios/CT-LOG-01_2_dashboard.png) |
 
 ### CT-LOG-03: Login com e-mail inexistente
 
@@ -37,7 +37,7 @@
 | **Resultado Esperado** | O sistema não autentica o usuário e aparece uma mensagem de erro informando ao usuário que uma das suas credenciais estão incorretas. |
 | **Resultado Obtido** | O sistema não autenticou o usuário e apareceu uma mensagem de erro: “Invalid email or password”. |
 | **Status** | Aprovado. |
-| **Evidências** | 1. ![CT-LOG-03_1_formulario_preenchido_email_incorreto.png](../evidencias/cenarios/CT-LOG-03_1_formulario_preenchido_email_incorreto.png)<br>2. ![CT-LOG-03_1_mensagem_de_erro.png](../evidencias/cenarios/CT-LOG-03_1_mensagem_de_erro.png) |
+| **Evidências** | 1. ![CT-LOG-03_1_formulario_preenchido_email_incorreto.png](../evidencias/cenarios/CT-LOG-03_1_formulario_preenchido_email_inexistente.png)<br>2. ![CT-LOG-03_1_mensagem_de_erro.png](../evidencias/cenarios/CT-LOG-03_1_mensagem_de_erro.png) |
 
 ### CT-CAD-01: Cadastro com e-mail já existente
 
