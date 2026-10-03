@@ -63,7 +63,7 @@
 | **Resultado Esperado** | O sistema realiza o cadastro no sistema e aparece uma mensagem de confirmação. |
 | **Resultado Obtido** | O sistema realizou o cadastro e direcionou automaticamente o usuário para a tela principal. |
 | **Status** | Aprovado. |
-| **Evidência** | 1. ![CT-CAD-02_1_cadastro.png](../evidencias/cenarios/CT-CAD-02_1_cadastro.png)<br>2. ![CT_CAD_02_2__cadastro_finalizado.png](../evidencias/cenarios/CT_CAD_02_2__cadastro_finalizado.png) |
+| **Evidência** | 1. ![CT-CAD-02_1_cadastro.png](../evidencias/cenarios/CT-CAD-02_1_cadastro.png)<br>2. ![CT_CAD_02_2__cadastro_finalizado.png](../evidencias/cenarios/CT-CAD-02_2_cadastro_finalizado.png) |
 
 ### CT-DASH-01: Filtro de KM por veículo
 
