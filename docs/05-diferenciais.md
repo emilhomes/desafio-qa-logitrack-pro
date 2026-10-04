@@ -57,8 +57,8 @@ As listagens e os cadastros retornam os dados dentro do campo `data`, junto de `
 | Listar veículos com o token emitido por senha incorreta | Acesso aos dados | 401 ou 403 | 200, com acesso aos dados | Reprovado | BUG-01 |
 | Cadastro de veículo com ano 3000 | Rejeição de dado inválido | Erro 4xx | 201 Created | Reprovado | BUG-02 |
 | Cadastro de manutenção com datas no ano 3000 | Rejeição de dado inválido | Erro 4xx | 201 Created | Reprovado | BUG-03 |
-| Cadastro de viagem com chegada anterior à saída | Rejeição de dado inválido | Erro 4xx | 201 Created | eprovado | BUG-04 |
-| Cadastro de viagem com km negativo (-100) | Rejeição de dado inválido | Erro 4xx | 201 Created | eprovado | BUG-05 |
+| Cadastro de viagem com chegada anterior à saída | Rejeição de dado inválido | Erro 4xx | 201 Created | Reprovado | BUG-04 |
+| Cadastro de viagem com km negativo (-100) | Rejeição de dado inválido | Erro 4xx | 201 Created | Reprovado | BUG-05 |
 | Total de km antes e depois da viagem com km negativo | Efeito no indicador | Total não alterado por dado inválido | Total de 19066.50 antes da exclusão e 19166.50 depois, ou seja, o valor negativo foi subtraído do total | Reprovado | BUG-05 |
 | Cadastro de viagem sobreposta para o mesmo veículo | Rejeição ou sinalização | Erro 4xx | 201 Created | Reprovado | BUG-06 |
 
@@ -118,3 +118,60 @@ Os testes reprovados falham de propósito: eles descrevem o comportamento espera
 4. Executar as requisições uma a uma. As requisições de cadastro com dado inválido criam registros quando o bug está presente, então cada uma deve ser seguida da requisição de exclusão correspondente (as exclusões usam os identificadores gravados pelos scripts).
 
 Não é recomendado executar a coleção inteira de uma só vez pelo Runner, porque os cadastros e as exclusões dependem da ordem.
+
+## Análise de desempenho
+
+### Objetivo
+
+Realizar uma validação básica do tempo de resposta e do comportamento da API sob múltiplas requisições, conforme proposto no desafio.
+
+### Método
+
+- **Ferramenta:** Collection Runner do Postman, executando a coleção de testes de API descrita acima.
+- **Requisições:** apenas consultas (GET), para não criar nem alterar dados no ambiente compartilhado: Listar veículos, Listar manutenções, Listar viagens, Total de km (Dashboard) e Listar veículos sem autenticação (como contraste).
+- **Execução:** 20 iterações, com intervalo de 200 ms entre as requisições. As requisições foram feitas em sequência, e não de forma simultânea.
+- **Critério:** cada listagem foi verificada quanto ao status 200, ao formato JSON e ao tempo de resposta abaixo de 2000 ms. O limite de 2000 ms foi adotado por premissa, pois o desafio não define um requisito de desempenho.
+- **Data da execução:** 4 de outubro de 2026.
+
+### Resultados
+
+| Indicador | Valor |
+|---|---|
+| Iterações | 20 |
+| Requisições executadas | 100 (5 requisições em 20 iterações) |
+| Duração total | 51 s 539 ms (inclui o intervalo de 200 ms entre as requisições) |
+| Testes executados | 260 |
+| Testes aprovados | 260 |
+| Testes reprovados | 0 |
+| Tempo médio de resposta | 282 ms |
+
+Resultado por requisição:
+
+| Requisição | Testes aprovados | Testes reprovados |
+|---|---|---|
+| Listar veículos | 60 | 0 |
+| Listar veículos sem autenticação | 20 | 0 |
+| Listar manutenções | 60 | 0 |
+| Listar viagens | 60 | 0 |
+| Total de km | 60 | 0 |
+
+Como exemplo de uma das chamadas, a listagem de veículos respondeu com status 200 em 236 ms e 1,3 KB.
+
+### Evidências
+
+![Resultado da execução no Runner do Postman](../evidencias/diferenciais/DESEMPENHO_runner_20_iteracoes.png)
+
+![Resumo da execução por requisição](../evidencias/diferenciais/DESEMPENHO_runner_resumo_por_requisicao.png)
+
+### Conclusão e limitações
+
+- Nas 80 chamadas de listagem, nenhuma respondeu em mais de 2000 ms, e o tempo médio geral foi de 282 ms. Não foram observadas falhas nem variações de comportamento ao longo das 20 iterações.
+- A medição inclui a latência da conexão da máquina utilizada nos testes e foi feita em uma única execução, em um ambiente compartilhado. Os valores servem como referência inicial, e não como garantia de desempenho.
+- Esta análise não é um teste de carga, porque as requisições não foram simultâneas. Um teste de carga com volume maior deve ser feito em um ambiente dedicado, para não afetar outros usuários.
+
+### Como executar
+
+1. Executar o login válido da pasta Autenticação, para gravar o `token`.
+2. Abrir o Runner a partir da coleção e selecionar apenas as requisições de listagem (GET) e a de Total de km.
+3. Configurar 20 iterações e intervalo de 200 ms, e executar.
+4. Consultar o tempo médio de resposta e a quantidade de testes aprovados no resumo da execução.
