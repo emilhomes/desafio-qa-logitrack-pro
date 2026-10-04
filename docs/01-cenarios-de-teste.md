@@ -1,5 +1,35 @@
 ## Planejamento e Execução dos Cenários de Teste
 
+### Resumo dos cenários
+
+| Total | Aprovados | Reprovados | Bloqueados |
+|---|---|---|---|
+| 19 | 12 | 7 | 0 |
+
+| ID | Cenário | Módulo | Status | Bug relacionado |
+|---|---|---|---|---|
+| [CT-LOG-01](#ct-log-01-login-com-credenciais-válidas) | Login com credenciais válidas | Login | Aprovado | — |
+| [CT-LOG-02](#ct-log-02-login-com-e-mail-correto-e-senha-inválida) | Login com e-mail correto e senha inválida | Login | Reprovado | BUG-01 |
+| [CT-LOG-03](#ct-log-03-login-com-e-mail-inexistente) | Login com e-mail inexistente | Login | Aprovado | — |
+| [CT-CAD-01](#ct-cad-01-cadastro-com-e-mail-já-existente) | Cadastro com e-mail já existente | Cadastro | Aprovado | — |
+| [CT-CAD-02](#ct-cad-02-cadastro-de-usuário) | Cadastro de usuário | Cadastro | Aprovado | — |
+| [CT-DASH-01](#ct-dash-01-filtro-de-km-por-veículo) | Filtro de KM por veículo | Dashboard | Aprovado | — |
+| [CT-DASH-02](#ct-dash-02-acesso-ao-dashboard-sem-login) | Acesso ao dashboard sem login | Dashboard | Aprovado | — |
+| [CT-VEI-01](#ct-vei-01-buscar-veículo-por-placa) | Buscar veículo por placa | Veículos | Aprovado | — |
+| [CT-VEI-02](#ct-vei-02-cadastro-com-placa-duplicada) | Cadastro com placa duplicada | Veículos | Aprovado | — |
+| [CT-VEI-03](#ct-vei-03-cadastro-com-ano-inválido) | Cadastro com ano inválido | Veículos | Reprovado | BUG-02 |
+| [CT-MAN-01](#ct-man-01-cadastro-com-ano-inválido) | Cadastro com ano inválido | Manutenção | Reprovado | BUG-03 |
+| [CT-MAN-02](#ct-man-02-custo-inválido-zero-negativo-texto) | Custo inválido (zero, negativo, texto) | Manutenção | Aprovado | — |
+| [CT-MAN-03](#ct-man-03-status-de-pendente-para-em-realização) | Status de Pendente para Em Realização | Manutenção | Aprovado | — |
+| [CT-VIA-01](#ct-via-01-chegada-anterior-à-saída) | Chegada anterior à saída | Viagens | Reprovado | BUG-04 |
+| [CT-VIA-02](#ct-via-02-km-negativo) | KM negativo | Viagens | Reprovado | BUG-05 |
+| [CT-VIA-03](#ct-via-03-trajetos-sobrepostos-no-mesmo-veículo) | Trajetos sobrepostos no mesmo veículo | Viagens | Reprovado | BUG-06 |
+| [CT-INT-01](#ct-int-01-viagem-criada-reflete-no-total-de-km) | Viagem criada reflete no Total de KM | Integração | Aprovado | — |
+| [CT-INT-02](#ct-int-02-km-negativo-refletido-no-dashboard) | Km negativo refletido no dashboard | Integração | Reprovado | BUG-05 |
+| [CT-INT-03](#ct-int-03-manutenção-em-outubro-reflete-na-projeção-financeira) | Manutenção em outubro reflete na Projeção Financeira | Integração | Aprovado | — |
+
+Os bugs estão detalhados em [`04-bugs.md`](04-bugs.md).
+
 ### CT-LOG-01: Login com credenciais válidas
 
 | Campo | Descrição |
