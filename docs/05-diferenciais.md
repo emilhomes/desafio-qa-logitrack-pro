@@ -86,7 +86,7 @@ Os testes reprovados falham de propósito: eles descrevem o comportamento espera
 
 **BUG-05: viagem com km negativo e efeito no total**
 
-![BUG-05: viagem com km negativo](../evidencias/diferenciais/[BUG-05] Viagem com km negativo deve ser rejeitada.png)
+![BUG-05: viagem com km negativo](../evidencias/diferenciais/API_BUG-05_viagem_km_negativo.png)
 
 ![BUG-05: total de km antes da exclusão](../evidencias/diferenciais/API_BUG-05_total_km_antes_da_exclusao.png)
 
