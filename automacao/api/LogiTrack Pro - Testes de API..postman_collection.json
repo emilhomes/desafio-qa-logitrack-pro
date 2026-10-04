@@ -1,0 +1,1214 @@
+{
+	"info": {
+		"_postman_id": "cd05978e-6743-4a6d-aa88-84187407bc71",
+		"name": "LogiTrack Pro - Testes de API.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "51681113",
+		"_collection_link": "https://eb-milhomes-7442240.postman.co/workspace/Eduardo-Milhomes's-Workspace~23cb32ae-6d0e-451e-8f58-062a2f4aecb4/collection/51681113-cd05978e-6743-4a6d-aa88-84187407bc71?action=share&source=collection_link&creator=51681113"
+	},
+	"item": [
+		{
+			"name": "Autenticação",
+			"item": [
+				{
+					"name": "{{baseUrl}}/auth/login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+									"",
+									"pm.test(\"Resposta segue o contrato esperado\", () => {",
+									"  const json = pm.response.json();",
+									"  pm.expect(json).to.have.property(\"status\", 200);",
+									"  pm.expect(json).to.have.property(\"message\");",
+									"  pm.expect(json).to.have.property(\"timestamp\");",
+									"  pm.expect(json.data).to.include.all.keys(\"userId\", \"name\", \"email\", \"token\");",
+									"  pm.expect(json.data.token).to.be.a(\"string\").and.not.empty;",
+									"});",
+									"",
+									"// guarda o token para usar nas próximas requisições",
+									"if (pm.response.code === 200) {",
+									"  pm.environment.set(\"token\", pm.response.json().data.token);",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							},
+							{
+								"key": "accept-language",
+								"value": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7",
+								"disabled": true
+							},
+							{
+								"key": "content-type",
+								"value": "application/json"
+							},
+							{
+								"key": "origin",
+								"value": "https://logitrack.danieldiegosantana.me",
+								"disabled": true
+							},
+							{
+								"key": "priority",
+								"value": "u=1, i",
+								"disabled": true
+							},
+							{
+								"key": "referer",
+								"value": "https://logitrack.danieldiegosantana.me/",
+								"disabled": true
+							},
+							{
+								"key": "sec-ch-ua",
+								"value": "\"Google Chrome\";v=\"153\", \"Not_A Brand\";v=\"8\", \"Chromium\";v=\"153\"",
+								"disabled": true
+							},
+							{
+								"key": "sec-ch-ua-mobile",
+								"value": "?1",
+								"disabled": true
+							},
+							{
+								"key": "sec-ch-ua-platform",
+								"value": "\"Android\"",
+								"disabled": true
+							},
+							{
+								"key": "sec-fetch-dest",
+								"value": "empty",
+								"disabled": true
+							},
+							{
+								"key": "sec-fetch-mode",
+								"value": "cors",
+								"disabled": true
+							},
+							{
+								"key": "sec-fetch-site",
+								"value": "same-site",
+								"disabled": true
+							},
+							{
+								"key": "user-agent",
+								"value": "Mozilla/5.0 (Linux; Android 16; Pixel 10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Mobile Safari/537.36",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"{{email}}\",\n    \"password\": \"{{password}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						},
+						"description": "Generated from cURL: curl --url '{{baseUrl}}/auth/login' \\\n  -H 'accept: */*' \\\n  -H 'accept-language: pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7' \\\n  -H 'content-type: application/json' \\\n  -H 'origin: https://logitrack.danieldiegosantana.me' \\\n  -H 'priority: u=1, i' \\\n  -H 'referer: https://logitrack.danieldiegosantana.me/' \\\n  -H 'sec-ch-ua: \"Google Chrome\";v=\"153\", \"Not_A Brand\";v=\"8\", \"Chromium\";v=\"153\"' \\\n  -H 'sec-ch-ua-mobile: ?1' \\\n  -H 'sec-ch-ua-platform: \"Android\"' \\\n  -H 'sec-fetch-dest: empty' \\\n  -H 'sec-fetch-mode: cors' \\\n  -H 'sec-fetch-site: same-site' \\\n  -H 'user-agent: Mozilla/5.0 (Linux; Android 16; Pixel 10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Mobile Safari/537.36' \\\n  --data-raw '{\"email\":\"{{email}}\",\"password\":\"{{password}}\"'"
+					},
+					"response": []
+				},
+				{
+					"name": "[BUG-01] Login com senha incorreta deve ser rejeitado",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Senha incorreta deve ser rejeitada (401)\", () => {",
+									"  pm.response.to.have.status(401);",
+									"});",
+									"",
+									"pm.test(\"Nenhum token deve ser emitido com senha incorreta\", () => {",
+									"  const json = pm.response.json();",
+									"  pm.expect((json.data && json.data.token) || \"\").to.be.empty;",
+									"});",
+									"",
+									"if (pm.response.code === 200) {",
+									"  pm.environment.set(\"tokenInvalido\", pm.response.json().data.token);",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							},
+							{
+								"key": "accept-language",
+								"value": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7"
+							},
+							{
+								"key": "content-type",
+								"value": "application/json"
+							},
+							{
+								"key": "origin",
+								"value": "https://logitrack.danieldiegosantana.me"
+							},
+							{
+								"key": "priority",
+								"value": "u=1, i"
+							},
+							{
+								"key": "referer",
+								"value": "https://logitrack.danieldiegosantana.me/"
+							},
+							{
+								"key": "sec-ch-ua",
+								"value": "\"Google Chrome\";v=\"153\", \"Not_A Brand\";v=\"8\", \"Chromium\";v=\"153\""
+							},
+							{
+								"key": "sec-ch-ua-mobile",
+								"value": "?1"
+							},
+							{
+								"key": "sec-ch-ua-platform",
+								"value": "\"Android\""
+							},
+							{
+								"key": "sec-fetch-dest",
+								"value": "empty"
+							},
+							{
+								"key": "sec-fetch-mode",
+								"value": "cors"
+							},
+							{
+								"key": "sec-fetch-site",
+								"value": "same-site"
+							},
+							{
+								"key": "user-agent",
+								"value": "Mozilla/5.0 (Linux; Android 16; Pixel 10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Mobile Safari/537.36"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"{{email}}\",\n    \"password\": \"123456\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						},
+						"description": "Generated from cURL: curl --url '{{baseUrl}}/auth/login' \\\n  -H 'accept: */*' \\\n  -H 'accept-language: pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7' \\\n  -H 'content-type: application/json' \\\n  -H 'origin: https://logitrack.danieldiegosantana.me' \\\n  -H 'priority: u=1, i' \\\n  -H 'referer: https://logitrack.danieldiegosantana.me/' \\\n  -H 'sec-ch-ua: \"Google Chrome\";v=\"153\", \"Not_A Brand\";v=\"8\", \"Chromium\";v=\"153\"' \\\n  -H 'sec-ch-ua-mobile: ?1' \\\n  -H 'sec-ch-ua-platform: \"Android\"' \\\n  -H 'sec-fetch-dest: empty' \\\n  -H 'sec-fetch-mode: cors' \\\n  -H 'sec-fetch-site: same-site' \\\n  -H 'user-agent: Mozilla/5.0 (Linux; Android 16; Pixel 10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Mobile Safari/537.36' \\\n  --data-raw '{\"email\":\"{{email}}\",\"password\":\"{{password}}\"'"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Veículos",
+			"item": [
+				{
+					"name": "Listar Veículos",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+									"",
+									"pm.test(\"Resposta é JSON\", () => {",
+									"  pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"pm.test(\"Tempo de resposta abaixo de 2000 ms\", () => {",
+									"  pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/veiculos?page=0&size=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"veiculos"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar veículos Sem Autenticação",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Sem token, o acesso deve ser negado (401 ou 403)\", () => {",
+									"  pm.expect(pm.response.code).to.be.oneOf([401, 403]);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/veiculos?page=0&size=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"veiculos"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[BUG-01] Token de Senha Incorreta Acessa Dados",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Token de acesso indevido não deve acessar dados (401 ou 403)\", () => {",
+									"  pm.expect(pm.response.code).to.be.oneOf([401, 403]);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenInvalido}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/veiculos?page=0&size=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"veiculos"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[BUG-02] Veículo com Ano Inválido Deve Ser Rejeitado",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Ano inválido deve ser rejeitado (erro 4xx)\", () => {",
+									"  pm.expect(pm.response.code).to.be.within(400, 499);",
+									"});",
+									"",
+									"// se o sistema aceitou o dado inválido, guarda o id para podermos excluir depois",
+									"if (pm.response.code >= 200 && pm.response.code < 300) {",
+									"  const json = pm.response.json();",
+									"  pm.environment.set(\"veiculoCriadoId\", json.data && json.data.id);",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"placa\": \"EDU-0001\",\n  \"modelo\": \"TESTE-EDUARDO\",\n  \"tipo\": \"LEVE\",\n  \"ano\": 3000\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/veiculos",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"veiculos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Excluir Veículo de Teste",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Veículo de teste excluído com sucesso\", () => {",
+									"  pm.expect(pm.response.code).to.be.within(200, 299);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/veiculos/{{veiculoCriadoId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"veiculos",
+								"{{veiculoCriadoId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[BUG-05] Viagem com KM Negativo Deve ser Rejeitada",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Km negativo deve ser rejeitado (erro 4xx)\", () => {",
+									"  pm.expect(pm.response.code).to.be.within(400, 499);",
+									"});",
+									"",
+									"if (pm.response.code >= 200 && pm.response.code < 300) {",
+									"  const json = pm.response.json();",
+									"  pm.environment.set(\"viagemCriadaId\", json.data && json.data.id);",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"veiculoId\": 295,\n  \"dataSaida\": \"2026-09-09T00:00:00\",\n  \"dataChegada\": \"2026-09-10T00:00:00\",\n  \"origem\": \"TESTE-EDUARDO-A\",\n  \"destino\": \"TESTE-EDUARDO-B\",\n  \"kmPercorrida\": -100\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/viagens",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"viagens"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Criar Veículo de Teste (Apoio)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Veículo de apoio criado (201)\", () => pm.response.to.have.status(201));",
+									"",
+									"if (pm.response.code === 201) {",
+									"  pm.environment.set(\"veiculoTesteId\", pm.response.json().data.id);",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"placa\": \"EDU-0002\",\n  \"modelo\": \"TESTE-EDUARDO-APOIO\",\n  \"tipo\": \"LEVE\",\n  \"ano\": 2024\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/veiculos",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"veiculos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Excluir Veículo de Apoio (Limpeza)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Veículo de apoio excluído com sucesso\", () => {",
+									"  pm.expect(pm.response.code).to.be.within(200, 299);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/veiculos/{{veiculoTesteId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"veiculos",
+								"{{veiculoTesteId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Manutenção",
+			"item": [
+				{
+					"name": "Listar Manutenções",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+									"",
+									"pm.test(\"Resposta é JSON\", () => {",
+									"  pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"pm.test(\"Tempo de resposta abaixo de 2000 ms\", () => {",
+									"  pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/manutencoes?page=0&size=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"manutencoes"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[BUG-03] Manutenção com Ano Inválido Deve Ser Rejeitada",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Data com ano inválido deve ser rejeitada (erro 4xx)\", () => {",
+									"  pm.expect(pm.response.code).to.be.within(400, 499);",
+									"});",
+									"",
+									"if (pm.response.code >= 200 && pm.response.code < 300) {",
+									"  const json = pm.response.json();",
+									"  pm.environment.set(\"manutencaoCriadaId\", json.data && json.data.id);",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"veiculoId\": {{veiculoTesteId}},\n  \"dataInicio\": \"3000-01-01\",\n  \"dataFinalizacao\": \"3000-01-02\",\n  \"tipoServico\": \"Troca de óleo\",\n  \"custoEstimado\": 100,\n  \"status\": \"PENDENTE\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/manutencoes",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"manutencoes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Excluir Manutenção de Teste (Limpeza)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Manutenção de teste excluída com sucesso\", () => {",
+									"  pm.expect(pm.response.code).to.be.within(200, 299);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/manutencoes/{{manutencaoCriadaId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"manutencoes",
+								"{{manutencaoCriadaId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Viagens",
+			"item": [
+				{
+					"name": "Listar Viagens",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+									"",
+									"pm.test(\"Resposta é JSON\", () => {",
+									"  pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"pm.test(\"Tempo de resposta abaixo de 2000 ms\", () => {",
+									"  pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/viagens?page=0&size=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"viagens"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[BUG-04] Viagem com Chegada Anterior à Saída Deve ser Rejeitada.",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Chegada anterior à saída deve ser rejeitada (erro 4xx)\", () => {",
+									"  pm.expect(pm.response.code).to.be.within(400, 499);",
+									"});",
+									"",
+									"if (pm.response.code >= 200 && pm.response.code < 300) {",
+									"  const json = pm.response.json();",
+									"  pm.environment.set(\"viagemCriadaId\", json.data && json.data.id);",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"veiculoId\": 295,\n  \"dataSaida\": \"2026-09-10T00:00:00\",\n  \"dataChegada\": \"2026-09-09T00:00:00\",\n  \"origem\": \"TESTE-EDUARDO-A\",\n  \"destino\": \"TESTE-EDUARDO-B\",\n  \"kmPercorrida\": 100\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/viagens",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"viagens"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Excluir Viagem de Teste (limpeza)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Viagem de teste excluída com sucesso\", () => {",
+									"  pm.expect(pm.response.code).to.be.within(200, 299);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/viagens/{{viagemCriadaId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"viagens",
+								"{{viagemCriadaId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[BUG-05] Viagem com KM Negativo Deve ser Rejeitada",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Km negativo deve ser rejeitado (erro 4xx)\", () => {",
+									"  pm.expect(pm.response.code).to.be.within(400, 499);",
+									"});",
+									"",
+									"if (pm.response.code >= 200 && pm.response.code < 300) {",
+									"  const json = pm.response.json();",
+									"  pm.environment.set(\"viagemCriadaId\", json.data && json.data.id);",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"veiculoId\": 295,\n  \"dataSaida\": \"2026-09-09T00:00:00\",\n  \"dataChegada\": \"2026-09-10T00:00:00\",\n  \"origem\": \"TESTE-EDUARDO-A\",\n  \"destino\": \"TESTE-EDUARDO-B\",\n  \"kmPercorrida\": -100\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/viagens",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"viagens"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Criar Viagem Base (Apoio)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Viagem base criada (201)\", () => pm.response.to.have.status(201));",
+									"",
+									"if (pm.response.code === 201) {",
+									"  pm.environment.set(\"viagemBaseId\", pm.response.json().data.id);",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"veiculoId\": 295,\n  \"dataSaida\": \"2026-09-20T00:00:00\",\n  \"dataChegada\": \"2026-09-21T00:00:00\",\n  \"origem\": \"TESTE-EDUARDO-A\",\n  \"destino\": \"TESTE-EDUARDO-B\",\n  \"kmPercorrida\": 100\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/viagens",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"viagens"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[BUG-06] Viagem Sobreposta para o Mesmo Veículo",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Excluir viagem base (limpeza).",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Dashboard (Total KM)",
+			"item": [
+				{
+					"name": "Total KM",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+									"",
+									"pm.test(\"Resposta é JSON\", () => {",
+									"  pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"pm.test(\"Tempo de resposta abaixo de 2000 ms\", () => {",
+									"  pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/dashboard/total-km",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"dashboard",
+								"total-km"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "[BUG-05] Viagem com KM Negativo Deve ser Rejeitada",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Km negativo deve ser rejeitado (erro 4xx)\", () => {",
+							"  pm.expect(pm.response.code).to.be.within(400, 499);",
+							"});",
+							"",
+							"if (pm.response.code >= 200 && pm.response.code < 300) {",
+							"  const json = pm.response.json();",
+							"  pm.environment.set(\"viagemCriadaId\", json.data && json.data.id);",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"veiculoId\": 295,\n  \"dataSaida\": \"2026-09-09T00:00:00\",\n  \"dataChegada\": \"2026-09-10T00:00:00\",\n  \"origem\": \"TESTE-EDUARDO-A\",\n  \"destino\": \"TESTE-EDUARDO-B\",\n  \"kmPercorrida\": -100\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/viagens",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"viagens"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
