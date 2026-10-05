@@ -175,3 +175,82 @@ Como exemplo de uma das chamadas, a listagem de veículos respondeu com status 2
 2. Abrir o Runner a partir da coleção e selecionar apenas as requisições de listagem (GET) e a de Total de km.
 3. Configurar 20 iterações e intervalo de 200 ms, e executar.
 4. Consultar o tempo médio de resposta e a quantidade de testes aprovados no resumo da execução.
+
+## Automação de testes (prova de conceito)
+
+### Objetivo
+
+Automatizar na interface alguns cenários de login executados manualmente e reproduzir, de forma automática, o BUG-01 (senha incorreta aceita), de modo que o teste possa ser reutilizado como teste de regressão depois da correção.
+
+### Ferramenta
+
+- **Playwright para Python**, com o plugin pytest-playwright (Playwright 1.63.0 e pytest-playwright 0.9.0), executando no navegador Chromium.
+- As versões exatas das bibliotecas estão em [`automacao/ui/requirements.txt`](../automacao/ui/requirements.txt).
+- Os testes foram escritos e executados no Ubuntu, com Python 3.14.4.
+
+### Organização
+
+| Arquivo | Conteúdo |
+|---|---|
+| [`automacao/ui/tests/test_smoke.py`](../automacao/ui/tests/test_smoke.py) | Teste de verificação do ambiente: a tela de login carrega com o botão "Entrar" |
+| [`automacao/ui/tests/test_login.py`](../automacao/ui/tests/test_login.py) | Testes de login e de acesso ao Dashboard |
+| [`automacao/ui/requirements.txt`](../automacao/ui/requirements.txt) | Bibliotecas e versões utilizadas |
+
+### Testes implementados
+
+| Teste | Cenário relacionado | Comportamento verificado | Resultado |
+|---|---|---|---|
+| `test_tela_de_login_carrega` | Verificação do ambiente | O botão "Entrar" aparece na tela de login | Aprovado |
+| `test_ct_log_01_login_valido_acessa_o_dashboard` | CT-LOG-01 | Login com credenciais válidas leva ao Dashboard | Aprovado |
+| `test_ct_log_03_email_inexistente_exibe_erro` | CT-LOG-03 | E-mail inexistente exibe a mensagem de erro e permanece no login | Aprovado |
+| `test_ct_log_02_senha_incorreta_deve_ser_rejeitada` | CT-LOG-02 | Senha incorreta deve exibir erro e permanecer no login | Falha esperada (BUG-01) |
+| `test_dashboard_sem_login_redireciona_para_o_login` | Verificação adicional | Acessar o Dashboard sem estar logado leva ao login | Aprovado |
+
+O teste do BUG-01 está marcado como falha esperada (`xfail`), que indica uma falha causada por um defeito conhecido. Assim, a execução normal permanece estável (3 aprovados e 1 falha esperada no arquivo de login), e o defeito continua documentado no próprio teste. Quando o bug for corrigido, o teste passará a ser aprovado e a marcação deve ser removida. Para ver a falha real, o teste pode ser executado com a opção `--runxfail`: nesse caso ele é reprovado, porque o sistema leva o usuário ao Dashboard (`/dashboard`) e a mensagem de erro não aparece.
+
+### Resultados da execução
+
+- **Execução normal** do arquivo de login: 3 testes aprovados e 1 falha esperada, em 14,31 segundos.
+- **Execução com `--runxfail`:** o teste do BUG-01 é reprovado, com a página na URL do Dashboard após o login com senha incorreta.
+
+### Evidências
+
+![Execução normal dos testes de login](../evidencias/diferenciais/AUTOMACAO_pytest_login.png)
+
+![Execução com --runxfail: teste do BUG-01 reprovado](../evidencias/diferenciais/AUTOMACAO_pytest_login_runxfail.png)
+
+Os prints foram feitos quando o arquivo de login tinha três testes. O quarto teste (Dashboard sem login) foi adicionado depois e foi aprovado.
+
+### Decisões de projeto
+
+- **Credenciais fora do código:** o e-mail e a senha são lidos das variáveis de ambiente `LOGITRACK_EMAIL` e `LOGITRACK_PASSWORD`. Os testes que dependem delas são ignorados se as variáveis não estiverem definidas.
+- **Sem criação de dados:** os testes só fazem login e navegação, portanto não deixam registros no ambiente compartilhado.
+- **Seletores por papel e nome:** os campos e botões são localizados por papel e nome acessível (por exemplo, o campo "Email" e o botão "Entrar"), o que torna os testes mais legíveis e menos frágeis. Os nomes foram obtidos com o gerador de código do Playwright (`codegen`).
+
+### Como executar
+
+Comandos para Linux (Ubuntu), a partir da raiz do repositório:
+
+```bash
+cd automacao/ui
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+playwright install chromium
+
+export LOGITRACK_EMAIL="e-mail fornecido no desafio"
+read -s -p "Senha: " LOGITRACK_PASSWORD; export LOGITRACK_PASSWORD; echo
+
+pytest -v
+```
+
+Opções úteis:
+
+- `pytest -v --runxfail`: executa o teste do BUG-01 como teste comum, mostrando a falha real.
+- `pytest --headed`: abre o navegador para acompanhar a execução.
+
+### Limitações e próximos passos
+
+- Esta é uma prova de conceito pequena, focada em login e acesso ao Dashboard.
+- Os cenários dos demais bugs (BUG-02 a BUG-06) criam dados quando o defeito está presente. Para automatizá-los de forma segura, o ideal é criar os dados pela API e excluí-los ao final de cada teste.
+- Os testes podem ser integrados a um pipeline de entrega, para serem executados a cada alteração do sistema, como descrito em `03-estrategia-de-testes.md`.
