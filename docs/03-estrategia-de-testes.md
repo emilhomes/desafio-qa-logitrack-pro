@@ -6,7 +6,7 @@ Esta proposta apresenta os tipos de teste que podem ser incorporados ao processo
 
 ## Escopo
 
-A proposta se limita aos tipos de teste que se relacionam diretamente com o que foi observado na execução dos cenários: cinco dos seis bugs (BUG-02 a BUG-06) são falhas de **validação de dados**, o BUG-01 é uma falha de **autenticação** e o BUG-05 mostra um dado inválido **contaminando um indicador do Dashboard**. Por isso, a estratégia se concentra em testes de API, segurança, integração, interface automatizada e end-to-end. Os demais tipos citados no desafio não foram incluídos como recomendação porque não houve achados relacionados a eles: acessibilidade e compatibilidade entre navegadores e dispositivos não foram avaliadas, e o desempenho foi tratado apenas por uma validação básica de tempo de resposta (ver `05-diferenciais.md`), sem teste de carga.
+A proposta se limita aos tipos de teste que se relacionam diretamente com o que foi observado na execução dos cenários: cinco dos seis bugs (BUG-02 a BUG-06) são falhas de **validação de dados**, o BUG-01 é uma falha de **autenticação** e o BUG-05 mostra um dado inválido **contaminando um indicador do Dashboard**. Por isso, a estratégia se concentra em testes de API, segurança, integração, interface automatizada e end-to-end. Os demais tipos citados no desafio não foram incluídos como recomendação porque não houve achados relacionados a eles: a compatibilidade entre navegadores e dispositivos não foi avaliada, a acessibilidade foi avaliada apenas de forma automática com o Lighthouse (ver `05-diferenciais.md`), e o desempenho foi tratado apenas por uma validação básica de tempo de resposta (ver `05-diferenciais.md`), sem teste de carga.
 
 ## Resumo
 
