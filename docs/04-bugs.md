@@ -1,6 +1,6 @@
 # Relatório de Bugs
 
-Defeitos encontrados durante a execução dos cenários de teste do LogiTrack Pro (ver `01-cenarios-de-teste.md`). Para cada bug são apresentados o problema encontrado, o impacto e as condições necessárias para reproduzi-lo. Os dados de reprodução (pré-condições, dados, passos, resultado esperado e obtido) são os mesmos registrados nos cenários de origem.
+Defeitos encontrados durante a execução dos cenários de teste do LogiTrack Pro (ver `01-cenarios-de-teste.md`). Para cada bug são apresentados o problema encontrado, o impacto e as condições necessárias para reproduzi-lo. Os dados de reprodução (pré-condições, dados, passos, resultado esperado e obtido) são os mesmos registrados nos cenários de origem. Os bugs também foram reproduzidos diretamente na API e, no caso do BUG-01, por um teste automatizado de interface (ver `05-diferenciais.md`).
 
 ## Resumo
 
@@ -38,7 +38,8 @@ Defeitos encontrados durante a execução dos cenários de teste do LogiTrack Pr
 | **Passos para reproduzir** | 1. Abrir a URL da aplicação;<br>2. Verificar que a tela de login é exibida;<br>3. Preencher o campo "E-mail" com o e-mail informado;<br>4. Preencher o campo "Senha" com a senha inválida;<br>5. Clicar no botão "Entrar"; |
 | **Resultado esperado** | O sistema não autentica o usuário e aparece uma mensagem de erro informando ao usuário que uma das suas credenciais estão incorretas. |
 | **Resultado obtido** | O sistema autenticou o usuário e redirecionou para o Dashboard. Não apareceu nenhuma mensagem de erro. A requisição de login retornou status 200. |
-| **Evidências** | 1. ![Login com senha incorreta](../evidencias/bugs/BUG01_login_senha_errada.gif.gif)<br>2. ![Network](../evidencias/bugs/BUG01_network_login_200.png.png). |
+| **Evidências** | 1. ![Formulário preenchido com senha incorreta](../evidencias/cenarios/CT-LOG-02_1_formulario_preenchido_senha_incorreta.png)<br>2. ![Dashboard após o login](../evidencias/cenarios/CT-LOG-01_2_dashboard.png) |
+| **Reprodução na API** | Reproduzido diretamente na API: o login com senha incorreta retornou 200 com a mensagem "Login successful" e emitiu um token, e esse token acessou a listagem de veículos. Também reproduzido por teste automatizado de interface: após o login com senha incorreta, o sistema leva ao Dashboard.<br>1. ![API: login com senha incorreta](../evidencias/diferenciais/API_BUG-01_login_senha_incorreta.png)<br>2. ![API: token emitido acessa os dados](../evidencias/diferenciais/API_BUG-01_token_acessa_dados.png)<br>3. ![Teste automatizado reprovado](../evidencias/diferenciais/AUTOMACAO_pytest_login_runxfail.png) |
 | **Sugestão de correção** | Validar a senha no servidor antes de emitir a sessão ou o token de acesso e retornar erro de credenciais inválidas (status 401). Cobrir com teste automatizado de API e de interface. |
 
 ### BUG-02: Cadastro de veículo aceita ano inválido
@@ -56,6 +57,7 @@ Defeitos encontrados durante a execução dos cenários de teste do LogiTrack Pr
 | **Resultado esperado** | O sistema não deve permitir que o cadastro seja concluído e apareça uma mensagem de erro. |
 | **Resultado obtido** | O sistema cadastrou o veículo com ano inválido e apareceu uma mensagem de confirmação. |
 | **Evidências** | 1. ![Formulário com ano inválido](../evidencias/cenarios/CT-VEI-03_1_forms_ano_invalido.png)<br>2. ![Mensagem de confirmação exibida](../evidencias/cenarios/CT-VEI-03_2_mensagem_confirmacao.png) |
+| **Reprodução na API** | Reproduzido diretamente na API: o cadastro de veículo com ano 3000 retornou 201 Created.<br>![API: veículo com ano inválido](../evidencias/diferenciais/API_BUG-02_veiculo_ano_invalido.png) |
 | **Sugestão de correção** | Limitar o campo a um intervalo realista (por exemplo, do primeiro ano de fabricação aceito até o ano atual + 1), com mensagem de erro clara, no formulário e na API. |
 
 ### BUG-03: Cadastro de manutenção aceita ano inválido nas datas
@@ -73,6 +75,7 @@ Defeitos encontrados durante a execução dos cenários de teste do LogiTrack Pr
 | **Resultado esperado** | O sistema deve impedir que a manutenção seja salva. Uma mensagem de erro deve aparecer alertando que o ano ou a data inserida não é permitida. |
 | **Resultado obtido** | O sistema não impediu que a manutenção fosse salva e apareceu uma mensagem de confirmação de manutenção. |
 | **Evidências** | 1. ![Formulário preenchido com ano inválido](../evidencias/cenarios/CT-MAN-01_1_formulario_preenchido.png)<br>2. ![Mensagem de confirmação exibida](../evidencias/cenarios/CT-MAN-01_2_mensagem_confirmacao.png) |
+| **Reprodução na API** | Reproduzido diretamente na API: o cadastro de manutenção com datas no ano 3000 retornou 201 Created. O teste usou um veículo sem manutenção ativa, porque a API recusa (409) uma segunda manutenção ativa para o mesmo veículo.<br>![API: manutenção com ano inválido](../evidencias/diferenciais/API_BUG-03_manutencao_ano_invalido.png) |
 | **Sugestão de correção** | Definir um intervalo de datas permitido (por exemplo, limitar o ano a uma janela razoável em torno do ano atual) e validar também a ordem entre início e finalização, no formulário e na API. |
 
 ### BUG-04: Viagem aceita data de chegada anterior à data de saída
@@ -90,6 +93,7 @@ Defeitos encontrados durante a execução dos cenários de teste do LogiTrack Pr
 | **Resultado esperado** | O sistema não deve permitir o cadastro da viagem. O modal deve continuar aberto e a tela deve exibir uma mensagem de erro. |
 | **Resultado obtido** | O sistema permitiu o cadastro da viagem e apareceu uma mensagem de confirmação: “Viagem agendada com sucesso”. |
 | **Evidências** | 1. ![Formulário com data de chegada anterior à saída](../evidencias/cenarios/CT-VIA-01_1_forms_dataChegada_invalida.png)<br>2. ![Mensagem de confirmação exibida](../evidencias/cenarios/CT-VIA-01_2_mensagem_confirmacao.png) |
+| **Reprodução na API** | Reproduzido diretamente na API: o cadastro de viagem com chegada anterior à saída retornou 201 Created.<br>![API: viagem com chegada anterior à saída](../evidencias/diferenciais/API_BUG-04_viagem_chegada_anterior.png) |
 | **Sugestão de correção** | Exigir que a data de chegada seja igual ou posterior à data de saída, bloqueando o envio com mensagem clara, no formulário e na API. |
 
 ### BUG-05: Viagem aceita quilometragem negativa e o Dashboard subtrai o valor do total da frota
@@ -107,6 +111,7 @@ Defeitos encontrados durante a execução dos cenários de teste do LogiTrack Pr
 | **Resultado esperado** | **CT-VIA-02:** O sistema não deve processar o cadastro da viagem. A tela deve sinalizar um erro, exibindo uma mensagem informando que o valor deve ser maior que zero<br><br>**CT-INT-02:** Considerando que o sistema falhou ao barrar o KM negativo no cadastro, a integração com o Dashboard idealmente deveria ter uma tratativa para não subtrair esse valor do total da frota. |
 | **Resultado obtido** | **CT-VIA-02:** O sistema processa o cadastro da viagem mesmo com o valor da quilometragem sendo negativo, exibindo uma mensagem de confirmação: “Viagem agendada com sucesso”.<br><br>**CT-INT-02:** O Dashboard não possui tratativa para o erro do cadastro, subtraindo 500 km do total geral da frota e tornando a métrica gerencial incorreta. |
 | **Evidências** | 1. ![Formulário com km negativo](../evidencias/cenarios/CT-VIA-02_1_forms_km_negativo.png)<br>2. ![Mensagem de confirmação exibida](../evidencias/cenarios/CT-VIA-02_2_mensagem_confirmacao.png)<br>3. ![Valor de KM antes do cadastro](../evidencias/cenarios/CT-INT-02_1_antigo_valor_km.png)<br>4. ![Valor de KM depois do cadastro](../evidencias/cenarios/CT-INT-02_2_novo_valor_km.png) |
+| **Reprodução na API** | Reproduzido diretamente na API: o cadastro de viagem com km -100 retornou 201 Created, e o total de km do Dashboard passou de 19066.50 (com a viagem) para 19166.50 (depois de excluí-la), o que comprova que o valor negativo foi subtraído do total.<br>1. ![API: viagem com km negativo](../evidencias/diferenciais/API_BUG-05_viagem_km_negativo.png)<br>2. ![API: total de km antes da exclusão](../evidencias/diferenciais/API_BUG-05_total_km_antes_da_exclusao.png)<br>3. ![API: total de km após a exclusão](../evidencias/diferenciais/API_BUG-05_total_km_apos_exclusao.png) |
 | **Sugestão de correção** | Aceitar apenas valores maiores que zero no campo de quilometragem (formulário e API) e, como defesa adicional, ignorar ou sinalizar registros inválidos no cálculo dos indicadores do Dashboard. |
 
 ### BUG-06: Sistema permite viagens sobrepostas para o mesmo veículo
@@ -124,6 +129,7 @@ Defeitos encontrados durante a execução dos cenários de teste do LogiTrack Pr
 | **Resultado esperado** | O sistema deve bloquear a criação da viagem. Uma mensagem de erro deve alertar o usuário que o veículo já está alocado para outro trajeto. |
 | **Resultado obtido** | O sistema não bloqueou a criação da viagem, exibindo uma mensagem de confirmação: “Viagem agendada com sucesso”. |
 | **Evidências** | 1. ![Formulário com período sobreposto](../evidencias/cenarios/CT-VIA-03_1_forms_data_invalida.png)<br>2. ![Mensagem de confirmação exibida](../evidencias/cenarios/CT-VIA-03_2_mensagem_confirmacao.png) |
+| **Reprodução na API** | Reproduzido diretamente na API: o cadastro de uma segunda viagem para o mesmo veículo e o mesmo período retornou 201 Created.<br>![API: viagem sobreposta](../evidencias/diferenciais/API_BUG-06_viagem_sobreposta.png) |
 | **Sugestão de correção** | Antes de salvar, verificar se o veículo já possui viagem no período informado e, se houver, bloquear ou alertar o usuário (a decisão entre bloquear e alertar cabe ao time de produto). |
 
 ## Padrão observado
