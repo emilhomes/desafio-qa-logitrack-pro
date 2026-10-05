@@ -210,11 +210,11 @@ Automatizar na interface alguns cenários de login executados manualmente e repr
 
 | Teste | Cenário relacionado | Comportamento verificado | Resultado |
 |---|---|---|---|
-| `test_tela_de_login_carrega` | Verificação do ambiente | O botão "Entrar" aparece na tela de login | ✅ Aprovado |
-| `test_ct_log_01_login_valido_acessa_o_dashboard` | CT-LOG-01 | Login com credenciais válidas leva ao Dashboard | ✅ Aprovado |
-| `test_ct_log_03_email_inexistente_exibe_erro` | CT-LOG-03 | E-mail inexistente exibe a mensagem de erro e permanece no login | ✅ Aprovado |
-| `test_ct_log_02_senha_incorreta_deve_ser_rejeitada` | CT-LOG-02 | Senha incorreta deve exibir erro e permanecer no login | ⚠️ Falha esperada (BUG-01) |
-| `test_dashboard_sem_login_redireciona_para_o_login` | Verificação adicional | Acessar o Dashboard sem estar logado leva ao login | ✅ Aprovado |
+| `test_tela_de_login_carrega` | Verificação do ambiente | O botão "Entrar" aparece na tela de login | Aprovado |
+| `test_ct_log_01_login_valido_acessa_o_dashboard` | CT-LOG-01 | Login com credenciais válidas leva ao Dashboard | Aprovado |
+| `test_ct_log_03_email_inexistente_exibe_erro` | CT-LOG-03 | E-mail inexistente exibe a mensagem de erro e permanece no login | Aprovado |
+| `test_ct_log_02_senha_incorreta_deve_ser_rejeitada` | CT-LOG-02 | Senha incorreta deve exibir erro e permanecer no login | Falha esperada (BUG-01) |
+| `test_dashboard_sem_login_redireciona_para_o_login` | Verificação adicional | Acessar o Dashboard sem estar logado leva ao login | Aprovado |
 
 O teste do BUG-01 está marcado como falha esperada (`xfail`), que indica uma falha causada por um defeito conhecido. Assim, a execução normal permanece estável (3 aprovados e 1 falha esperada no arquivo de login), e o defeito continua documentado no próprio teste. Quando o bug for corrigido, o teste passará a ser aprovado e a marcação deve ser removida. Para ver a falha real, o teste pode ser executado com a opção `--runxfail`: nesse caso ele é reprovado, porque o sistema leva o usuário ao Dashboard (`/dashboard`) e a mensagem de erro não aparece.
 
@@ -293,11 +293,11 @@ Identificar problemas que possam dificultar o uso do sistema por pessoas com def
 
 | ID | Problema | Telas | Critério | Quem é afetado | Recomendação |
 |---|---|---|---|---|---|
-| A11Y-01 | Botões sem nome acessível. No Login, o botão identificado é o de mostrar e ocultar a senha. Nas demais telas, os botões específicos não foram detalhados (provavelmente botões apenas com ícone, a confirmar) | Todas as 6 telas | WCAG 4.1.2 (nome, função e valor) | Usuários de leitor de tela, que não sabem a função do botão | Dar um nome a cada botão apenas com ícone, por texto oculto ou atributo `aria-label` (por exemplo, "Mostrar senha") |
+| A11Y-01 | Botões sem nome acessível. No Login, o botão identificado é o de mostrar e ocultar a senha. | Todas as 6 telas | WCAG 4.1.2 (nome, função e valor) | Usuários de leitor de tela, que não sabem a função do botão | Dar um nome a cada botão apenas com ícone, por texto oculto ou atributo `aria-label` (por exemplo, "Mostrar senha") |
 | A11Y-02 | Áreas de toque sem tamanho ou espaçamento suficiente. No Login, foram apontados o botão de mostrar senha e o campo de senha | Login e Cadastro | WCAG 2.2, critério 2.5.8 (tamanho do alvo) | Pessoas com dificuldade motora e usuários de celular | Aumentar a área clicável do botão e separá-lo do campo |
 | A11Y-03 | Página sem região principal (`main`) | Login e Cadastro | Boa prática, relacionada a WCAG 1.3.1 e 2.4.1 | Usuários de leitor de tela que navegam por regiões | Envolver o conteúdo principal em um elemento `main`. Nas telas internas o item não foi reprovado |
 | A11Y-04 | Títulos fora de ordem sequencial. O título principal (nível 1) é seguido por títulos de nível 3 nos cards, sem nível 2 | Dashboard | Boa prática, relacionada a WCAG 1.3.1 e 2.4.6 | Usuários de leitor de tela que navegam pelos títulos | Usar a hierarquia em ordem (nível 1, depois 2, depois 3). A sequência foi confirmada também no resultado do teste automatizado de interface |
-| A11Y-05 | Elementos SVG com função de imagem sem alternativa textual, provavelmente o gráfico de rosca de Volume por Categoria (a confirmar). A legenda apresenta os valores em texto, o que reduz o impacto, mas o gráfico em si não tem descrição | Dashboard | WCAG 1.1.1 (conteúdo não textual) | Usuários de leitor de tela | Adicionar uma descrição curta ao gráfico, por exemplo "99 viagens leves (97,1%) e 3 pesadas (2,9%)" |
+| A11Y-05 | Elementos SVG com função de imagem sem alternativa textual, provavelmente o gráfico de rosca de Volume por Categoria. A legenda apresenta os valores em texto, o que reduz o impacto, mas o gráfico em si não tem descrição | Dashboard | WCAG 1.1.1 (conteúdo não textual) | Usuários de leitor de tela | Adicionar uma descrição curta ao gráfico, por exemplo "99 viagens leves (97,1%) e 3 pesadas (2,9%)" |
 
 ### Observação complementar
 
