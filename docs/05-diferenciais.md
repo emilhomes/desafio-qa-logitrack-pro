@@ -2,6 +2,16 @@
 
 Este documento reúne as atividades opcionais realizadas além dos testes manuais obrigatórios (ver `01-cenarios-de-teste.md`, `02-analise-ux.md`, `03-estrategia-de-testes.md` e `04-bugs.md`).
 
+## Resumo
+
+| Diferencial | Situação | Onde ver |
+|---|---|---|
+| Testes de API | Realizado com o Postman | Seção "Testes de API" e `automacao/api` |
+| Análise de desempenho | Validação básica de tempo de resposta sob múltiplas requisições | Seção "Análise de desempenho" |
+| Automação de testes | Prova de conceito com Playwright (Python) | Seção "Automação de testes" e `automacao/ui` |
+| Sugestões de melhoria no processo | Realizado | Seção final de `03-estrategia-de-testes.md` |
+| Análise de acessibilidade | Não realizada nesta entrega | - |
+
 ## Testes de API
 
 ### Objetivo
@@ -200,11 +210,11 @@ Automatizar na interface alguns cenários de login executados manualmente e repr
 
 | Teste | Cenário relacionado | Comportamento verificado | Resultado |
 |---|---|---|---|
-| `test_tela_de_login_carrega` | Verificação do ambiente | O botão "Entrar" aparece na tela de login | Aprovado |
-| `test_ct_log_01_login_valido_acessa_o_dashboard` | CT-LOG-01 | Login com credenciais válidas leva ao Dashboard | Aprovado |
-| `test_ct_log_03_email_inexistente_exibe_erro` | CT-LOG-03 | E-mail inexistente exibe a mensagem de erro e permanece no login | Aprovado |
-| `test_ct_log_02_senha_incorreta_deve_ser_rejeitada` | CT-LOG-02 | Senha incorreta deve exibir erro e permanecer no login | Falha esperada (BUG-01) |
-| `test_dashboard_sem_login_redireciona_para_o_login` | Verificação adicional | Acessar o Dashboard sem estar logado leva ao login | Aprovado |
+| `test_tela_de_login_carrega` | Verificação do ambiente | O botão "Entrar" aparece na tela de login | ✅ Aprovado |
+| `test_ct_log_01_login_valido_acessa_o_dashboard` | CT-LOG-01 | Login com credenciais válidas leva ao Dashboard | ✅ Aprovado |
+| `test_ct_log_03_email_inexistente_exibe_erro` | CT-LOG-03 | E-mail inexistente exibe a mensagem de erro e permanece no login | ✅ Aprovado |
+| `test_ct_log_02_senha_incorreta_deve_ser_rejeitada` | CT-LOG-02 | Senha incorreta deve exibir erro e permanecer no login | ⚠️ Falha esperada (BUG-01) |
+| `test_dashboard_sem_login_redireciona_para_o_login` | Verificação adicional | Acessar o Dashboard sem estar logado leva ao login | ✅ Aprovado |
 
 O teste do BUG-01 está marcado como falha esperada (`xfail`), que indica uma falha causada por um defeito conhecido. Assim, a execução normal permanece estável (3 aprovados e 1 falha esperada no arquivo de login), e o defeito continua documentado no próprio teste. Quando o bug for corrigido, o teste passará a ser aprovado e a marcação deve ser removida. Para ver a falha real, o teste pode ser executado com a opção `--runxfail`: nesse caso ele é reprovado, porque o sistema leva o usuário ao Dashboard (`/dashboard`) e a mensagem de erro não aparece.
 
