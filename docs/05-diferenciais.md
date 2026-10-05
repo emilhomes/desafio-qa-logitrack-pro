@@ -10,7 +10,7 @@ Este documento reúne as atividades opcionais realizadas além dos testes manuai
 | Análise de desempenho | Validação básica de tempo de resposta sob múltiplas requisições | Seção "Análise de desempenho" |
 | Automação de testes | Prova de conceito com Playwright (Python) | Seção "Automação de testes" e `automacao/ui` |
 | Sugestões de melhoria no processo | Realizado | Seção final de `03-estrategia-de-testes.md` |
-| Análise de acessibilidade | Não realizada nesta entrega | - |
+| Análise de acessibilidade | Avaliação automática com o Lighthouse em 6 telas, sem testes manuais | Seção "Análise de acessibilidade" |
 
 ## Testes de API
 
@@ -264,3 +264,62 @@ Opções úteis:
 - Esta é uma prova de conceito pequena, focada em login e acesso ao Dashboard.
 - Os cenários dos demais bugs (BUG-02 a BUG-06) criam dados quando o defeito está presente. Para automatizá-los de forma segura, o ideal é criar os dados pela API e excluí-los ao final de cada teste.
 - Os testes podem ser integrados a um pipeline de entrega, para serem executados a cada alteração do sistema, como descrito em `03-estrategia-de-testes.md`.
+
+## Análise de acessibilidade
+
+### Objetivo
+
+Identificar problemas que possam dificultar o uso do sistema por pessoas com deficiência, por meio de uma avaliação automática das principais telas.
+
+### Método
+
+- **Ferramenta:** Lighthouse (categoria Acessibilidade), versão 13.4.1, executado no Chrome DevTools (Chromium 153), com carregamento inicial da página e emulação desktop.
+- **Telas avaliadas:** Login, Cadastro, Dashboard, Veículos, Manutenção e Viagens. As telas internas foram avaliadas com o usuário autenticado.
+- **Data da execução:** 5 de outubro de 2026.
+- **Critérios de referência:** WCAG 2.1 e 2.2 (nível AA).
+
+### Resultados por tela
+
+| Tela | Nota | Itens reprovados |
+|---|---|---|
+| Login | 89 | Botões sem nome acessível; áreas de toque sem tamanho ou espaçamento suficiente; documento sem região principal (`main`) |
+| Cadastro | 89 | Os mesmos três itens do Login |
+| Dashboard | 92 | Botões sem nome acessível; ordem dos títulos (headings) fora de sequência; elementos SVG com função de imagem sem alternativa textual |
+| Veículos | 95 | Botões sem nome acessível |
+| Manutenção | 95 | Botões sem nome acessível |
+| Viagens | 95 | Botões sem nome acessível |
+
+### Achados
+
+| ID | Problema | Telas | Critério | Quem é afetado | Recomendação |
+|---|---|---|---|---|---|
+| A11Y-01 | Botões sem nome acessível. No Login, o botão identificado é o de mostrar e ocultar a senha. Nas demais telas, os botões específicos não foram detalhados (provavelmente botões apenas com ícone, a confirmar) | Todas as 6 telas | WCAG 4.1.2 (nome, função e valor) | Usuários de leitor de tela, que não sabem a função do botão | Dar um nome a cada botão apenas com ícone, por texto oculto ou atributo `aria-label` (por exemplo, "Mostrar senha") |
+| A11Y-02 | Áreas de toque sem tamanho ou espaçamento suficiente. No Login, foram apontados o botão de mostrar senha e o campo de senha | Login e Cadastro | WCAG 2.2, critério 2.5.8 (tamanho do alvo) | Pessoas com dificuldade motora e usuários de celular | Aumentar a área clicável do botão e separá-lo do campo |
+| A11Y-03 | Página sem região principal (`main`) | Login e Cadastro | Boa prática, relacionada a WCAG 1.3.1 e 2.4.1 | Usuários de leitor de tela que navegam por regiões | Envolver o conteúdo principal em um elemento `main`. Nas telas internas o item não foi reprovado |
+| A11Y-04 | Títulos fora de ordem sequencial. O título principal (nível 1) é seguido por títulos de nível 3 nos cards, sem nível 2 | Dashboard | Boa prática, relacionada a WCAG 1.3.1 e 2.4.6 | Usuários de leitor de tela que navegam pelos títulos | Usar a hierarquia em ordem (nível 1, depois 2, depois 3). A sequência foi confirmada também no resultado do teste automatizado de interface |
+| A11Y-05 | Elementos SVG com função de imagem sem alternativa textual, provavelmente o gráfico de rosca de Volume por Categoria (a confirmar). A legenda apresenta os valores em texto, o que reduz o impacto, mas o gráfico em si não tem descrição | Dashboard | WCAG 1.1.1 (conteúdo não textual) | Usuários de leitor de tela | Adicionar uma descrição curta ao gráfico, por exemplo "99 viagens leves (97,1%) e 3 pesadas (2,9%)" |
+
+### Observação complementar
+
+Nas capturas feitas com a janela estreita (779 px de largura), as colunas finais das tabelas de Veículos e Manutenção aparecem cortadas (Ações e Status). Isso reforça a melhoria de UX número 6, sobre responsividade (ver `02-analise-ux.md`).
+
+### Evidências
+
+![Lighthouse: Login](../evidencias/diferenciais/A11Y_lighthouse_login.png)
+
+![Lighthouse: Cadastro](../evidencias/diferenciais/A11Y_lighthouse_cadastro.png)
+
+![Lighthouse: Dashboard](../evidencias/diferenciais/A11Y_lighthouse_dashboard.png)
+
+![Lighthouse: Veículos](../evidencias/diferenciais/A11Y_lighthouse_veiculos.png)
+
+![Lighthouse: Manutenção](../evidencias/diferenciais/A11Y_lighthouse_manutencao.png)
+
+![Lighthouse: Viagens](../evidencias/diferenciais/A11Y_lighthouse_viagens.png)
+
+### Limitações e próximos passos
+
+- A avaliação automática detecta apenas parte dos problemas de acessibilidade. Os itens que o próprio Lighthouse indica para verificação manual (10 em cada tela) não foram avaliados.
+- Não foram feitos testes de navegação por teclado, de foco nas janelas de cadastro, de leitor de tela nem de zoom de 200%.
+- Os elementos exatos dos achados A11Y-01 (fora do Login) e A11Y-05 devem ser confirmados abrindo cada item reprovado no relatório do Lighthouse.
+- Como próximos passos, recomenda-se incluir verificações automáticas de acessibilidade (Lighthouse ou axe) no pipeline e completar a análise com os testes manuais.
