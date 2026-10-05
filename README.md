@@ -13,7 +13,7 @@ Análise de qualidade da aplicação **LogiTrack Pro**, realizada por Eduardo co
 | Bugs registrados | 6 (1 crítico, 2 de severidade alta e 3 de severidade média) |
 | Melhorias de UX propostas | 6 |
 | Tipos de teste propostos na estratégia | 5 (API, segurança, integração, interface automatizada e end-to-end) |
-| Diferenciais | Testes de API (Postman), análise de desempenho (validação básica), prova de conceito de automação (Playwright) e sugestões de melhoria no processo |
+| Diferenciais | Testes de API (Postman), análise de desempenho (validação básica), prova de conceito de automação (Playwright), análise de acessibilidade (automática, com Lighthouse) e sugestões de melhoria no processo |
 
 **Principais achados:**
 
@@ -70,6 +70,7 @@ Os nomes dos arquivos de evidência seguem o identificador do cenário ou do bug
 | Google Chrome com DevTools | Execução manual dos testes, captura de evidências e observação das requisições na aba Network (status e endpoints) |
 | Postman | Testes de API e análise de desempenho (Collection Runner) |
 | Playwright para Python (com pytest) | Prova de conceito de automação de testes de interface |
+| Lighthouse (Chrome DevTools) | Avaliação automática de acessibilidade |
 | Jira | Organização das etapas do desafio em quadro, com épicos |
 | Google Docs | Elaboração e revisão dos textos da documentação |
 | GitHub e Markdown | Versionamento e entrega da documentação |
@@ -81,7 +82,7 @@ Os nomes dos arquivos de evidência seguem o identificador do cenário ou do bug
 - **Ausência de especificação funcional:** o desafio não traz requisitos detalhados. As regras de validação esperadas (por exemplo, ano de veículo realista, quilometragem maior que zero, data de chegada igual ou posterior à de saída) foram definidas com base em bom senso e no comportamento de sistemas desse tipo. A regra de viagens sobrepostas para o mesmo veículo (BUG-06) é uma regra de negócio assumida e deve ser confirmada com o time de produto.
 - **Ambiente compartilhado:** o ambiente já continha registros criados por outros testes (por exemplo, veículos com ano negativo ou futuro, e viagens com km negativo), e outras pessoas também o utilizam. Por isso, os números do sistema variam ao longo do tempo. No início da análise, o Dashboard exibia 19.676 km no total da frota e 99 viagens no gráfico de volume por categoria, e as listas tinham 260 veículos e 82 manutenções.
 - **Dados criados nos testes:** os cenários manuais criaram uma conta de usuário de teste e registros de veículo, manutenção e viagem, alguns com dados inválidos de propósito, para comprovar os bugs. Nos testes de API, cada registro criado foi excluído em seguida, e a análise de desempenho usou apenas consultas (GET).
-- **Escopo da estratégia de testes:** a proposta contempla os tipos de teste relacionados ao que foi observado na execução dos cenários. O desempenho foi avaliado apenas com uma validação básica de tempo de resposta, sem teste de carga. Acessibilidade e compatibilidade entre navegadores e dispositivos não foram avaliadas.
+- **Escopo da estratégia de testes:** a proposta contempla os tipos de teste relacionados ao que foi observado na execução dos cenários. O desempenho foi avaliado apenas com uma validação básica de tempo de resposta, sem teste de carga. A acessibilidade foi avaliada apenas de forma automática (Lighthouse), sem testes manuais de teclado e de leitor de tela, e a compatibilidade entre navegadores e dispositivos não foi avaliada.
 - **Limite de tempo de resposta:** o valor de 2000 ms usado nos testes de API é uma premissa, pois o desafio não define requisito de desempenho.
 
 ## Diferenciais abordados
@@ -92,7 +93,7 @@ Os nomes dos arquivos de evidência seguem o identificador do cenário ou do bug
 | Testes de API | Coleção do Postman com testes de status, acesso e dados inválidos | [`automacao/api`](automacao/api) e [`docs/05-diferenciais.md`](docs/05-diferenciais.md) |
 | Análise de desempenho | Validação básica de tempo de resposta com 20 iterações | [`docs/05-diferenciais.md`](docs/05-diferenciais.md) |
 | Sugestões de melhoria no processo | Critérios de aceite, validação no servidor, testes no pipeline, definição de pronto e ambiente de testes separado | [`docs/03-estrategia-de-testes.md`](docs/03-estrategia-de-testes.md) |
-| Análise de acessibilidade | Não realizada nesta entrega | - |
+| Análise de acessibilidade | Avaliação automática com o Lighthouse em 6 telas (Login, Cadastro, Dashboard, Veículos, Manutenção e Viagens) | [`docs/05-diferenciais.md`](docs/05-diferenciais.md) |
 
 ## Execução dos testes automatizados
 
